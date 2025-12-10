@@ -21,24 +21,46 @@
     </div>
     
     <div class="album-actions">
-      <button class="btn btn-primary">Add to Cart</button>
+      <button 
+        @click="toggleCart" 
+        class="btn"
+        :class="isInCart ? 'btn-remove' : 'btn-primary'"
+        :aria-label="isInCart ? 'Remove from cart' : 'Add to cart'"
+      >
+        {{ isInCart ? 'Remove from Cart' : 'Add to Cart' }}
+      </button>
       <button class="btn btn-secondary">Preview</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Album } from '../types/album'
+import { useCartStore } from '../stores/cart'
+
+const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/300x300/667eea/white?text=Album+Cover'
 
 interface Props {
   album: Album
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const cartStore = useCartStore()
+
+const isInCart = computed(() => cartStore.isInCart(props.album.id))
+
+const toggleCart = () => {
+  if (isInCart.value) {
+    cartStore.removeFromCart(props.album.id)
+  } else {
+    cartStore.addToCart(props.album)
+  }
+}
 
 const handleImageError = (event: Event): void => {
   const target = event.target as HTMLImageElement
-  target.src = 'https://via.placeholder.com/300x300/667eea/white?text=Album+Cover'
+  target.src = PLACEHOLDER_IMAGE
 }
 </script>
 
@@ -164,6 +186,16 @@ const handleImageError = (event: Event): void => {
 
 .btn-primary:hover {
   background: #5a6fd8;
+  transform: translateY(-2px);
+}
+
+.btn-remove {
+  background: #ff4757;
+  color: white;
+}
+
+.btn-remove:hover {
+  background: #e03e4c;
   transform: translateY(-2px);
 }
 

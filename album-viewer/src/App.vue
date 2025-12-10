@@ -1,9 +1,16 @@
 <template>
   <div class="app">
     <header class="header">
-      <h1>🎵 Album Collection</h1>
-      <p>Discover amazing music albums</p>
+      <div class="header-content">
+        <div class="header-title">
+          <h1>🎵 Album Collection</h1>
+          <p>Discover amazing music albums</p>
+        </div>
+        <CartIcon :is-cart-open="isCartOpen" @toggle="toggleCart" />
+      </div>
     </header>
+
+    <CartPanel :is-open="isCartOpen" @close="closeCart" />
 
     <main class="main">
       <div v-if="loading" class="loading">
@@ -31,11 +38,14 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import AlbumCard from './components/AlbumCard.vue'
+import CartIcon from './components/CartIcon.vue'
+import CartPanel from './components/CartPanel.vue'
 import type { Album } from './types/album'
 
 const albums = ref<Album[]>([])
 const loading = ref<boolean>(true)
 const error = ref<string | null>(null)
+const isCartOpen = ref<boolean>(false)
 
 const fetchAlbums = async (): Promise<void> => {
   try {
@@ -49,6 +59,14 @@ const fetchAlbums = async (): Promise<void> => {
   } finally {
     loading.value = false
   }
+}
+
+const toggleCart = () => {
+  isCartOpen.value = !isCartOpen.value
+}
+
+const closeCart = () => {
+  isCartOpen.value = false
 }
 
 onMounted(() => {
@@ -66,6 +84,20 @@ onMounted(() => {
   text-align: center;
   margin-bottom: 3rem;
   color: white;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.header-title {
+  text-align: left;
+  flex: 1;
 }
 
 .header h1 {
@@ -145,6 +177,16 @@ onMounted(() => {
 @media (max-width: 768px) {
   .app {
     padding: 1rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .header-title {
+    text-align: center;
   }
   
   .header h1 {
