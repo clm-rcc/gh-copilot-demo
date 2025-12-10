@@ -39,6 +39,8 @@ import { computed } from 'vue'
 import type { Album } from '../types/album'
 import { useCartStore } from '../stores/cart'
 
+const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/300x300/667eea/white?text=Album+Cover'
+
 interface Props {
   album: Album
 }
@@ -58,7 +60,7 @@ const toggleCart = () => {
 
 const handleImageError = (event: Event): void => {
   const target = event.target as HTMLImageElement
-  target.src = 'https://via.placeholder.com/300x300/667eea/white?text=Album+Cover'
+  target.src = PLACEHOLDER_IMAGE
 }
 </script>
 

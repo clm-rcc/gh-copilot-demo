@@ -11,7 +11,21 @@ export const useCartStore = defineStore('cart', () => {
     try {
       const savedCart = localStorage.getItem('album-cart')
       if (savedCart) {
-        items.value = JSON.parse(savedCart)
+        const parsed = JSON.parse(savedCart)
+        // Validate that parsed data is an array
+        if (Array.isArray(parsed)) {
+          // Validate each item has required Album properties
+          const validItems = parsed.filter(item => 
+            item && 
+            typeof item === 'object' &&
+            typeof item.id === 'number' &&
+            typeof item.title === 'string' &&
+            typeof item.artist === 'string' &&
+            typeof item.price === 'number' &&
+            typeof item.image_url === 'string'
+          )
+          items.value = validItems
+        }
       }
     } catch (error) {
       console.error('Error loading cart from localStorage:', error)

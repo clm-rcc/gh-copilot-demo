@@ -124,6 +124,8 @@
 import { useCartStore } from '../stores/cart'
 import { onMounted, onUnmounted } from 'vue'
 
+const PLACEHOLDER_IMAGE = 'https://via.placeholder.com/80x80/667eea/white?text=Album'
+
 interface Props {
   isOpen: boolean
 }
@@ -153,7 +155,7 @@ const clearAll = () => {
 
 const handleImageError = (event: Event): void => {
   const target = event.target as HTMLImageElement
-  target.src = 'https://via.placeholder.com/80x80/667eea/white?text=Album'
+  target.src = PLACEHOLDER_IMAGE
 }
 
 // Handle escape key to close cart
